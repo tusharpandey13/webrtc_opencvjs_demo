@@ -99,7 +99,7 @@ function passThrough(src) {
   
   let classifier = new cv.CascadeClassifier();  // initialize classifier
   let utils = new Utils('errorMessage'); //use utils class
-  let faceCascadeFile = '../xml/haarcascade_frontalface_default.xml'; // path to xml
+  let faceCascadeFile = 'xml/haarcascade_frontalface_default.xml'; // path to xml
   // use createFileFromUrl to "pre-build" the xml
   utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
     classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
