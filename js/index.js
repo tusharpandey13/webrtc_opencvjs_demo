@@ -8,6 +8,8 @@ const constraints = window.constraints = {
 
 let vc = null;
 let video = null;
+let streaming = false;
+let canplaylistneradded = false;
 
 function handleSuccess(stream) {
   video = document.querySelector('video');
@@ -17,17 +19,22 @@ function handleSuccess(stream) {
   window.stream = stream; // make variable available to browser console
   video.srcObject = stream;
 
-  video.addEventListener("canplay", function(ev) {
-    // if (!streaming) {
-    let width = video.videoWidth;
-    let height = video.videoHeight;
-    video.setAttribute("width", width);
-    video.setAttribute("height", height);
-    //   streaming = true;
-    vc = new cv.VideoCapture(video);
-    // }
-    startVideoProcessing(width, height);
-  }, false);
+  if (!canplaylistneradded){
+    let width = null; let height = null;
+    video.addEventListener("canplay", function(ev) {
+      if (!streaming) {
+        canplaylistneradded = true;
+        width = video.videoWidth;
+        height = video.videoHeight;
+        video.setAttribute("width", width);
+        video.setAttribute("height", height);
+        streaming = true;
+        vc = new cv.VideoCapture(video);
+      }
+      startVideoProcessing(width, height);
+    }, false);
+  }
+
 }
 
 function handleError(error) {
@@ -51,77 +58,100 @@ function errorMsg(msg, error) {
 }
 
 async function init(e) {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    handleSuccess(stream);
-    // e.target.disabled = true;
-  } catch (e) {
-    handleError(e);
+  if (!streaming) {
+    console.log("fefefefefefe");
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia(constraints);
+      handleSuccess(stream);
+      // e.target.disabled = true;
+    } catch (e) {
+      handleError(e);
+    }
+    document.querySelector('#showVideo').innerHTML = "Stop camera";
   }
-
-  document.querySelector('#showVideo').innerHTML = "Stop video";
-  document.querySelector('#showVideo').addEventListener('click', e => stopCamera());
+  else{
+    stopCamera();
+    document.querySelector('#showVideo').innerHTML = "Start camera";
+  }
 }
 
 
-let src = null;
+let source = null;
 let dstC1 = null;
 let dstC3 = null;
 let dstC4 = null;
 
 
 function startVideoProcessing(width, height) {
-  // if (!streaming) {
-  //   console.warn("Please startup your webcam");
-  //   return;
-  // }
-  // stopVideoProcessing();
-  src = new cv.Mat(height, width, cv.CV_8UC4);
-  dstC1 = new cv.Mat(height, width, cv.CV_8UC1);
-  dstC3 = new cv.Mat(height, width, cv.CV_8UC3);
-  dstC4 = new cv.Mat(height, width, cv.CV_8UC4);
+  if (!streaming) {
+    console.warn("Please startup your webcam");
+    return;
+  }
+  clearbuffers();
+  setupbuffers(width, height);
   requestAnimationFrame(processVideo);
 }
 
 function passThrough(src) {
+  // cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY);
+  cv.flip(src, src, 1);
+  cv.cvtColor(src, dstC1, cv.COLOR_RGBA2GRAY);
+  
+  let classifier = new cv.CascadeClassifier();  // initialize classifier
+  let utils = new Utils('errorMessage'); //use utils class
+  let faceCascadeFile = 'xml/haarcascade_frontalface_default.xml'; // path to xml
+  // use createFileFromUrl to "pre-build" the xml
+  utils.createFileFromUrl(faceCascadeFile, faceCascadeFile, () => {
+    classifier.load(faceCascadeFile); // in the callback, load the cascade from file 
+  });
+
+  let faces = new cv.RectVector();
+  classifier.detectMultiScale(dstC1, faces, 1.3, 5);
+  // draw faces.
+  for (let i = 0; i < faces.size(); ++i) {
+      let face = faces.get(i);
+      let point1 = new cv.Point(face.x, face.y);
+      let point2 = new cv.Point(face.x + face.width, face.y + face.height);
+      cv.rectangle(src, point1, point2, [255, 0, 0, 255]);
+  }
+
+
   return src;
 }
 
 function processVideo() {
+  if (!streaming) return;
   // stats.begin();
-  vc.read(src);
-  let result = passThrough(src);
+  vc.read(source);
+  let result = passThrough(source);
   cv.imshow("canvasOutput", result);
   // stats.end();
   requestAnimationFrame(processVideo);
 }
 
-function stopVideoProcessing() {
-  if (src != null && !src.isDeleted()) src.delete();
+function clearbuffers() {
+  if (source != null && !source.isDeleted()) source.delete();
   if (dstC1 != null && !dstC1.isDeleted()) dstC1.delete();
   if (dstC3 != null && !dstC3.isDeleted()) dstC3.delete();
   if (dstC4 != null && !dstC4.isDeleted()) dstC4.delete();
 }
-
+function setupbuffers(width, height){
+  source = new cv.Mat(height, width, cv.CV_8UC4);
+  dstC1 = new cv.Mat(height, width, cv.CV_8UC1);
+  dstC3 = new cv.Mat(height, width, cv.CV_8UC3);
+  dstC4 = new cv.Mat(height, width, cv.CV_8UC4);
+}
 function stopCamera() {
-  // if (!streaming) return;
-  stopVideoProcessing();
-  document.getElementById("canvasOutput").getContext("2d").clearRect(0, 0, width, height);
+  if (!streaming) return;
+  streaming = false;
+  clearbuffers();
+  // document.getElementById("canvasOutput").getContext("2d").clearRect(0, 0, width, height);
   video.pause();
   video.srcObject = null;
   if (window.stream != null) window.stream.getVideoTracks()[0].stop();
-  // streaming = false;
 }
 
 function opencvIsReady() {
   console.log('OpenCV.js is ready');
-  // if (!featuresReady) {
-  //   console.log('Requred features are not ready.');
-  //   return;
-  // }
-  // info.innerHTML = '';
-  // container.className = '';
-  // // initUI();
-  // startCamera();
   document.querySelector('#showVideo').addEventListener('click', e => init(e));
 }
