@@ -10,12 +10,15 @@
 
   <title>getUserMedia</title>
 
+  <link href="css/index.css" rel="stylesheet" />
+
 </head>
 
 <body>
 
   <div id="container">
-    <video id="gum-local" autoplay playsinline></video>
+    <div class="invisible"><video id="gum-local" autoplay playsinline></video></div>
+    <canvas id="canvasOutput" width="320" height="240"></canvas>
     <button id="showVideo">Open camera</button>
 
     <div id="errorMsg"></div>
@@ -23,7 +26,7 @@
 
   <script src="js/adapter-latest.js"></script>
   <script src="js/index.js"></script>
-
+  <script async src="js/opencv.js" onload="opencvIsReady()"></script>
 </body>
 
 </html>
