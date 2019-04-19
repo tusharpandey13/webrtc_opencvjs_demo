@@ -172,6 +172,7 @@ function stopCamera() {
 
 function opencvIsReady() {
 	console.log("OpenCV.js is ready");
+	document.querySelector("#showVideo").innerHTML = "Show video";
 	document
 		.querySelector("#showVideo")
 		.addEventListener("click", e => init(e));
