@@ -14,6 +14,7 @@ let canplaylistneradded = false;
 let width_out, height_out;
 
 function handleSuccess(stream) {
+	document.getElementById("video-container").style.display = "flex";
 	video = document.querySelector("video");
 	const videoTracks = stream.getVideoTracks();
 	console.log("Got stream with constraints:", constraints);
@@ -65,6 +66,11 @@ function handleError(error) {
 				"microphone, you need to allow the page access to your devices in " +
 				"order for the demo to work."
 		);
+	} else if (error.name == "NotSupportedError") {
+		errorMsg(
+			"Either your browser doesn't support webrtc or " +
+				"this page is loaded from a non secure connection."
+		);
 	}
 	errorMsg(`getUserMedia error: ${error.name}`, error);
 }
@@ -78,7 +84,6 @@ function errorMsg(msg, error) {
 }
 
 async function init(e) {
-	document.getElementById("video-container").style.display = "flex";
 	if (!streaming) {
 		console.log("fefefefefefe");
 		try {
@@ -187,4 +192,11 @@ function opencvIsReady() {
 	document
 		.querySelector("#showVideo")
 		.addEventListener("click", e => init(e));
+	document.getElementById("showVideo").style.backgroundColor =
+		"hsl(195, 100%, 31%)";
+	document.getElementById("showVideo").style.borderColor =
+		"hsl(195, 100%, 41%)";
+	document.getElementById("showVideo").style.color = "hsl(195, 100%, 85%)";
+	document.getElementById("showVideo").style.cursor = "grabbing";
+	document.getElementById("showVideo").style.borderStyle = "solid";
 }

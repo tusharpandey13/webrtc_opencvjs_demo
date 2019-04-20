@@ -38,11 +38,17 @@
 						playsinline
 					></video>
 					<canvas id="canvasOutput"></canvas>
-					<div id="errorMsg"></div>
 				</div>
+
 				<div id="button-container">
-					<button id="showVideo">Loading opencv.js</button>
+					<button id="showVideo">
+						<div class="loading-container">
+							<div class="loadingSpinner"></div>
+							<span class="loadingtext">Loading opencv.js</span>
+						</div>
+					</button>
 				</div>
+				<div id="errorMsg"></div>
 			</section>
 		</main>
 		<script src="js/adapter-latest.js"></script>
