@@ -15,17 +15,26 @@
 	</head>
 
 	<body>
-		<div id="container">
-			hello
-			<div class="invisible">
-				<video id="gum-local" autoplay playsinline></video>
-			</div>
-			<canvas id="canvasOutput" width="320" height="240"></canvas>
-			<button id="showVideo">Loading opencv.js</button>
-
-			<div id="errorMsg"></div>
-		</div>
-
+		<main>
+			<aside class="sidebar">
+				<a href="https://github.com/ucisysarch/opencvjs">
+					<h1 class="heading">opencv.js</h1>
+				</a>
+				<p class="sidebar-text">
+					Simple face recognition using haar cascades
+				</p>
+			</aside>
+			<section class="content">
+				<div id="container">
+					<div class="invisible">
+						<video id="gum-local" autoplay playsinline></video>
+					</div>
+					<canvas id="canvasOutput" width="320" height="240"></canvas>
+					<div id="errorMsg"></div>
+				</div>
+				<button id="showVideo">Loading opencv.js</button>
+			</section>
+		</main>
 		<script src="js/adapter-latest.js"></script>
 		<script src="js/utils.js"></script>
 		<!-- <script async src="js/opencv.js" onload="opencvIsReady()"></script> -->

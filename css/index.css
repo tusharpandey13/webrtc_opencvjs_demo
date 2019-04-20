@@ -1,3 +1,47 @@
+body,
+.main {
+	margin: 0;
+	background-color: #2c2c2c;
+}
+
+p {
+	font-family: sans-serif;
+}
+
+header,
+section,
+aside,
+footer {
+	padding: 2%;
+	margin: 8px;
+}
+
+.sidebar {
+	background-color: #464343;
+	color: white;
+	text-align: center;
+	border: 1px solid hsl(0, 2%, 30%);
+}
+
+.heading {
+	font-size: 2em;
+	font-family: monospace;
+	font-weight: bold;
+	color: #63c38a;
+	text-decoration: underline;
+	text-decoration-color: hsl(145, 33%, 35%);
+}
+
+.sidebar-text {
+	font-size: 1.2em;
+	color: #dddddd;
+}
+
+.content {
+	background-color: hsl(0, 2%, 43%);
+	border: 1px solid hsl(0, 2%, 55%);
+}
+
 .invisible {
-  display: none;
+	display: none;
 }
