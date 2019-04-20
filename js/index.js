@@ -27,12 +27,7 @@ function handleSuccess(stream) {
 			function(ev) {
 				if (!streaming) {
 					canplaylistneradded = true;
-					// width_out = video.videoWidth;
-					// height_out = video.videoHeight;
-					width_out = 320;
-					height_out = 240;
-					video.setAttribute("width", width_out);
-					video.setAttribute("height", height_out);
+					setresolution();
 					streaming = true;
 					vc = new cv.VideoCapture(video);
 				}
@@ -41,6 +36,19 @@ function handleSuccess(stream) {
 			false
 		);
 	}
+}
+function setresolution() {
+	var v_w = video.videoWidth;
+	var v_h = video.videoHeight;
+	var w = Math.max(
+		document.documentElement.clientWidth - 24,
+		window.innerWidth - 24 || 0
+	);
+	width_out = Math.min(w, v_w);
+	height_out = width_out / (v_w / v_h);
+	console.log(v_w, v_h, w, width_out, height_out);
+	video.setAttribute("width", width_out);
+	video.setAttribute("height", height_out);
 }
 
 function handleError(error) {
@@ -70,6 +78,7 @@ function errorMsg(msg, error) {
 }
 
 async function init(e) {
+	document.getElementById("video-container").style.display = "flex";
 	if (!streaming) {
 		console.log("fefefefefefe");
 		try {
