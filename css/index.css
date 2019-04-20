@@ -12,8 +12,8 @@ header,
 section,
 aside,
 footer {
-	padding: 2%;
-	margin: 8px;
+	padding: 8px;
+	margin: 4px;
 }
 
 .sidebar {
@@ -36,10 +36,14 @@ footer {
 	font-size: 1.2em;
 	color: #dddddd;
 }
+.sidebar-text a {
+	color: #3fbcc4;
+	text-decoration-style: dotted;
+}
 
 .content {
 	background-color: hsl(0, 2%, 43%);
-	border: 1px solid hsl(0, 2%, 55%);
+	border: 1px solid hsl(0, 2%, 50%);
 }
 
 .invisible {

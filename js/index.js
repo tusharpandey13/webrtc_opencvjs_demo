@@ -27,8 +27,10 @@ function handleSuccess(stream) {
 			function(ev) {
 				if (!streaming) {
 					canplaylistneradded = true;
-					width_out = video.videoWidth;
-					height_out = video.videoHeight;
+					// width_out = video.videoWidth;
+					// height_out = video.videoHeight;
+					width_out = 320;
+					height_out = 240;
 					video.setAttribute("width", width_out);
 					video.setAttribute("height", height_out);
 					streaming = true;
