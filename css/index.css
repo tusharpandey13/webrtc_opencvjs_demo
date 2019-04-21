@@ -194,7 +194,7 @@ footer p {
 	justify-content: center;
 	min-width: 100%;
 }
-#final-footer span {
+#final-footer a {
 	min-width: 100%;
 	background-color: #2a2a2a;
 	text-align: center;
