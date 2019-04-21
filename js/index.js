@@ -15,6 +15,8 @@ let width_out, height_out;
 
 function handleSuccess(stream) {
 	document.getElementById("video-container").style.display = "flex";
+	document.getElementById("info-container").style.display = "none";
+
 	video = document.querySelector("video");
 	const videoTracks = stream.getVideoTracks();
 	console.log("Got stream with constraints:", constraints);
